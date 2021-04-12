@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect  } from 'react'
 import PokemonCard from './PokemonCard'
 
 const Dashboard = () => {
   const [state, setState] = useState('')
   const [party, setParty] = useState([])
+  const [error, setError] = useState('test')
   const [pokemon, setPokemon] = useState(null)
 
   const handleChange = e => setState(e.target.value)
@@ -16,6 +17,7 @@ const Dashboard = () => {
         setPokemon(data)
       }
     } catch (e) {
+      setError("The pokemon you're looking for doesn't exists")
       console.log(e, 'error')
     }
   }
@@ -32,11 +34,20 @@ const Dashboard = () => {
     setParty(newParty)
   }
 
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError('')
+      }, 4000)
+    }
+  }, [error])
+
   return (
     <>
       <div>
         <input data-testid="searchInput" type="text" onChange={handleChange} value={state} />
         <button onClick={handleFindPokemon}>Find</button>
+        {error && <p>{error}</p>}
       </div>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div>
